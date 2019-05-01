@@ -10,7 +10,6 @@ namespace Slab
     public class SwatchViewModel : IGLWidget, INotifyPropertyChanged
     {
         public DelegateCommand ApplyBtn_OnClick { get; private set; }
-        public DelegateCommand SetBtn_OnClick { get; private set; }
 
         private OGContext _ogContext;
 
@@ -26,7 +25,6 @@ namespace Slab
         public SwatchViewModel()
         {
             ApplyBtn_OnClick = new DelegateCommand(OnApply);
-            SetBtn_OnClick = new DelegateCommand(OnSet);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -60,13 +58,6 @@ namespace Slab
         {
             UpdateBackground();
             RefreshSwatch();
-        }
-
-        public void OnSet()
-        {
-            UpdateBackground();
-            RefreshSwatch();
-            // Close();
         }
     }
 }

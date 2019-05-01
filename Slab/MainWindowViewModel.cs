@@ -33,9 +33,16 @@ namespace Slab
             }
         }
 
+        public DelegateCommand Window_OnLoaded { get; private set; }
+
         protected void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void OnWindowLoaded()
+        {
+            SelectedTool = Tools.First();
         }
 
         public void OnSelectedToolChanged()
@@ -67,6 +74,7 @@ namespace Slab
 
         public MainWindowViewModel()
         {
+            Window_OnLoaded = new DelegateCommand(OnWindowLoaded);
             _context = new OGContext()
             {
                 Background = new OGBackgroundColor()
@@ -81,6 +89,12 @@ namespace Slab
             Tools = new List<ITool>();
             Tools.Add(new WelcomeTool());
             Tools.Add(new SwatchTool());
+            Tools.Add(new WelcomeTool());
+            Tools.Add(new WelcomeTool());
+            Tools.Add(new WelcomeTool());
+            Tools.Add(new WelcomeTool());
+            Tools.Add(new WelcomeTool());
+            Tools.Add(new WelcomeTool());
         }
 
     }

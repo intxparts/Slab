@@ -12,13 +12,11 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
 
         </Grid.RowDefinitions>
         <Slider Grid.Row="0" Orientation="Horizontal" Value="{Binding Red}" Minimum="0" Maximum="1" Name="Red_Slider"/>
         <Slider Grid.Row="1" Orientation="Horizontal" Value="{Binding Green}" Minimum="0" Maximum="1" Name="Green_Slider"/>
         <Slider Grid.Row="2" Orientation="Horizontal" Value="{Binding Blue}" Minimum="0" Maximum="1" Name="Blue_Slider"/>
         <Button Grid.Row="3" x:Name="apply_btn" Content="Apply" Command="{Binding ApplyBtn_OnClick}" />
-        <Button Grid.Row="4" x:Name="set_btn" Content="Set" Command="{Binding SetBtn_OnClick}"/>
     </Grid>
 </UserControl>

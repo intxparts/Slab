@@ -70,10 +70,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DelegateCommand.cs" />
-    <Compile Include="IGLWidget.cs" />
+    <Compile Include="IRequiresGLDataContext.cs" />
     <Compile Include="ITool.cs" />
     <Compile Include="MainWindowViewModel.cs" />
-    <Compile Include="OGContext.cs" />
+    <Compile Include="GLDataContext.cs" />
     <Compile Include="Swatch.xaml.cs">
       <DependentUpon>Swatch.xaml</DependentUpon>
     </Compile>

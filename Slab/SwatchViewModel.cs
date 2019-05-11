@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Slab
 {
-    public class SwatchViewModel : IGLWidget, INotifyPropertyChanged
+    public class SwatchViewModel : IRequiresGLDataContext, INotifyPropertyChanged
     {
         public DelegateCommand ApplyBtn_OnClick { get; private set; }
 
-        private OGContext _ogContext;
+        private GLDataContext _glDataContext;
 
         private double _red;
         public double Red { get { return _red; } set { _red = value; NotifyPropertyChanged(nameof(Red)); } }
@@ -34,24 +34,24 @@ namespace Slab
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void Initialize(OGContext context)
+        public void Initialize(GLDataContext glDataContext)
         {
-            _ogContext = context;
-            _red = _ogContext.Background.Red;
-            _blue = _ogContext.Background.Blue;
-            _green = _ogContext.Background.Green;
+            _glDataContext = glDataContext;
+            _red = _glDataContext.BackgroundColor.Red;
+            _blue = _glDataContext.BackgroundColor.Blue;
+            _green = _glDataContext.BackgroundColor.Green;
         }
 
         public void RefreshSwatch()
         {
-            _ogContext.Invalidate();
+            _glDataContext.RequestInvalidate();
         }
 
         public void UpdateBackground()
         {
-            _ogContext.Background.Red = (float)Red;
-            _ogContext.Background.Blue = (float)Blue;
-            _ogContext.Background.Green = (float)Green;
+            _glDataContext.BackgroundColor.Red = (float)Red;
+            _glDataContext.BackgroundColor.Blue = (float)Blue;
+            _glDataContext.BackgroundColor.Green = (float)Green;
         }
 
         public void OnApply()

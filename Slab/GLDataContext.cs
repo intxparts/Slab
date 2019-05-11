@@ -7,21 +7,22 @@ using System.Threading.Tasks;
 
 namespace Slab
 {
-    public class OGBackgroundColor
+    public class Color
     {
         public float Red { get; set; }
         public float Green { get; set; }
         public float Blue { get; set; }
     }
 
-    public class OGContext
+    public class GLDataContext
     {
-        public OGBackgroundColor Background { get; set; }
-        public GLControl View { get; set; } 
+        public event EventHandler RequestGLInvalidate;
 
-        public void Invalidate()
+        public Color BackgroundColor { get; set; }
+
+        public void RequestInvalidate()
         {
-            View.Invalidate();
+            RequestGLInvalidate?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -11,8 +11,8 @@ namespace Slab
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        private readonly OGContext _context;
-        public OGContext OGContext { get { return _context; } }
+        private readonly GLDataContext _glDataContext;
+        public GLDataContext GLDataContext { get { return _glDataContext; } }
         public List<ITool> Tools { get; private set; }
 
         private ITool _selectedTool;
@@ -54,10 +54,7 @@ namespace Slab
             if (viewModel == null || usrCtrl == null)
                 return;
 
-            // this is temporary - need something more scalable
-            var viewModelAsIGLWidget = viewModel as IGLWidget;
-            if (viewModelAsIGLWidget != null)
-                viewModelAsIGLWidget.Initialize(_context);
+            InitVMWithGlobalDeps(viewModel);
 
             // bind the view data context to the view model
             usrCtrl.DataContext = viewModel;
@@ -66,18 +63,22 @@ namespace Slab
             RequestLoadTool?.Invoke(this, usrCtrl);
         }
 
+        private void InitVMWithGlobalDeps(object viewModel)
+        {
+            var viewModelAsIGLWidget = viewModel as IRequiresGLDataContext;
+            if (viewModelAsIGLWidget != null)
+                viewModelAsIGLWidget.Initialize(_glDataContext);
+        }
+
         public event EventHandler<UserControl> RequestLoadTool;
         public event PropertyChangedEventHandler PropertyChanged;
-
-        // remove this
-        public MainWindow View { get; set; }
 
         public MainWindowViewModel()
         {
             Window_OnLoaded = new DelegateCommand(OnWindowLoaded);
-            _context = new OGContext()
+            _glDataContext = new GLDataContext()
             {
-                Background = new OGBackgroundColor()
+                BackgroundColor = new Color()
                 {
                     Red = 0,
                     Blue = 0,

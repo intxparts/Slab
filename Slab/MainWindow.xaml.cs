@@ -33,9 +33,13 @@ namespace Slab
             InitializeComponent();
             _viewModel = new MainWindowViewModel();
             _viewModel.RequestLoadTool += _viewModel_RequestLoadTool; ;
-            _viewModel.OGContext.View = _glControl;
-            _viewModel.View = this;
+            _viewModel.GLDataContext.RequestGLInvalidate += GLContext_RequestGLInvalidate;
             DataContext = _viewModel;
+        }
+
+        private void GLContext_RequestGLInvalidate(object sender, EventArgs e)
+        {
+            this._glControl.Invalidate();
         }
 
         private void _viewModel_RequestLoadTool(object sender, System.Windows.Controls.UserControl e)
@@ -60,9 +64,9 @@ namespace Slab
         private void GLControl_Paint(object sender, PaintEventArgs e)
         {
             GL.ClearColor(
-                _viewModel.OGContext.Background.Red,
-                _viewModel.OGContext.Background.Green,
-                _viewModel.OGContext.Background.Blue,
+                _viewModel.GLDataContext.BackgroundColor.Red,
+                _viewModel.GLDataContext.BackgroundColor.Green,
+                _viewModel.GLDataContext.BackgroundColor.Blue,
                 1
             );
             GL.Clear(

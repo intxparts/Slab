@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Slab
 {
-    internal interface IGLWidget
+    internal interface IRequiresGLDataContext
     {
-        void Initialize(OGContext context);
+        void Initialize(GLDataContext glDataContext);
     }
 }

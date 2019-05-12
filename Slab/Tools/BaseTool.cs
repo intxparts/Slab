@@ -79,7 +79,12 @@ namespace Slab.Tools
         }
     }
 
-    public abstract class BaseViewModel : INotifyPropertyChanged
+    public interface IViewModel
+    {
+        void Initialize(GLDataContext glDataContext, DataModel dataModel, LicenseData licenseData);
+    }
+
+    public abstract class BaseViewModel : IViewModel, INotifyPropertyChanged
     {
         protected LicenseData _licenseData;
         protected DataModel _dataModel;

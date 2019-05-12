@@ -52,7 +52,7 @@ namespace Slab
             var viewModel = Activator.CreateInstance(SelectedTool.DefinedViewModelType);
             var view = Activator.CreateInstance(SelectedTool.DefinedViewType);
             var usrCtrl = view as UserControl;
-            var vm = viewModel as BaseViewModel;
+            var vm = viewModel as IViewModel;
             if (vm == null || usrCtrl == null)
                 return;
 

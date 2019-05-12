@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Slab
+namespace Slab.Tools
 {
     /// <summary>
-    /// Interaction logic for Welcome.xaml
+    /// Interaction logic for Swatch.xaml
     /// </summary>
-    public partial class Welcome : UserControl
+    public partial class Swatch : UserControl
     {
-        public Welcome()
+        public Swatch()
         {
             InitializeComponent();
         }

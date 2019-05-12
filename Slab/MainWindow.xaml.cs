@@ -32,8 +32,9 @@ namespace Slab
         {
             InitializeComponent();
             _viewModel = new MainWindowViewModel();
-            _viewModel.RequestLoadTool += _viewModel_RequestLoadTool; ;
+            _viewModel.RequestLoadTool += _viewModel_RequestLoadTool;
             _viewModel.GLDataContext.RequestGLInvalidate += GLContext_RequestGLInvalidate;
+
             DataContext = _viewModel;
         }
 
@@ -53,6 +54,7 @@ namespace Slab
 
         private void WindowsFormsHost_Initialized(object sender, EventArgs e)
         {
+
             var flags = GraphicsContextFlags.Default;
             _glControl = new GLControl(new GraphicsMode(32, 24), 2, 0, flags);
             _glControl.MakeCurrent();

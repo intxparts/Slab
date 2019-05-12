@@ -13,18 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Slab
+namespace Slab.Tools
 {
     /// <summary>
-    /// Interaction logic for Swatch.xaml
+    /// Interaction logic for Welcome.xaml
     /// </summary>
-    public partial class Swatch : UserControl
+    public partial class Welcome : UserControl
     {
-        public Swatch()
+        public Welcome()
         {
             InitializeComponent();
-            // todo - automatically register viewmodels with their views
-            DataContext = new SwatchViewModel();
         }
     }
 }

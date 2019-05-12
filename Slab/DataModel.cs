@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Slab
 {
-    internal interface IRequiresGLDataContext
+    public class DataModel
     {
-        void Initialize(GLDataContext glDataContext);
     }
 }

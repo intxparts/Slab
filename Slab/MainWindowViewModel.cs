@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Slab.Tools;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -9,9 +10,14 @@ using System.Windows.Controls;
 
 namespace Slab
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public sealed class MainWindowViewModel : INotifyPropertyChanged
     {
-        private readonly GLDataContext _glDataContext;
+        private GLDataContext _glDataContext;
+        private DataModel _dataModel;
+        private LicenseData _licenseData;
+
+        public DataModel DataModel { get { return _dataModel; } }
+        public LicenseData LicenseData { get { return _licenseData; } }
         public GLDataContext GLDataContext { get { return _glDataContext; } }
         public List<ITool> Tools { get; private set; }
 
@@ -35,11 +41,6 @@ namespace Slab
 
         public DelegateCommand Window_OnLoaded { get; private set; }
 
-        protected void NotifyPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public void OnWindowLoaded()
         {
             SelectedTool = Tools.First();
@@ -48,34 +49,34 @@ namespace Slab
         public void OnSelectedToolChanged()
         {
             // instantiate its view and view model using the activator
-            var viewModel = Activator.CreateInstance(SelectedTool.ViewModelType);
-            var view = Activator.CreateInstance(SelectedTool.ViewType);
+            var viewModel = Activator.CreateInstance(SelectedTool.DefinedViewModelType);
+            var view = Activator.CreateInstance(SelectedTool.DefinedViewType);
             var usrCtrl = view as UserControl;
-            if (viewModel == null || usrCtrl == null)
+            var vm = viewModel as BaseViewModel;
+            if (vm == null || usrCtrl == null)
                 return;
 
-            InitVMWithGlobalDeps(viewModel);
+            vm.Initialize(_glDataContext, _dataModel, _licenseData);
 
             // bind the view data context to the view model
-            usrCtrl.DataContext = viewModel;
+            usrCtrl.DataContext = vm;
 
             // raise request load tool and pass in the view as an argument to the event
             RequestLoadTool?.Invoke(this, usrCtrl);
         }
 
-        private void InitVMWithGlobalDeps(object viewModel)
-        {
-            var viewModelAsIGLWidget = viewModel as IRequiresGLDataContext;
-            if (viewModelAsIGLWidget != null)
-                viewModelAsIGLWidget.Initialize(_glDataContext);
-        }
-
         public event EventHandler<UserControl> RequestLoadTool;
+
         public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public MainWindowViewModel()
         {
             Window_OnLoaded = new DelegateCommand(OnWindowLoaded);
+
             _glDataContext = new GLDataContext()
             {
                 BackgroundColor = new Color()
@@ -85,18 +86,23 @@ namespace Slab
                     Green = 0
                 }
             };
-
+            _dataModel = new DataModel();
+            _licenseData = new LicenseData() { LicenseType = LicenseType.Experimental };
 
             Tools = new List<ITool>();
             Tools.Add(new WelcomeTool());
             Tools.Add(new SwatchTool());
+            Tools.Add(new LicenseTool());
             Tools.Add(new WelcomeTool());
             Tools.Add(new WelcomeTool());
             Tools.Add(new WelcomeTool());
             Tools.Add(new WelcomeTool());
             Tools.Add(new WelcomeTool());
             Tools.Add(new WelcomeTool());
-        }
 
+            foreach (var tool in Tools)
+                tool.Initialize(_dataModel, _licenseData);
+
+        }
     }
 }

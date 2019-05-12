@@ -5,13 +5,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Slab
+namespace Slab.Tools
 {
-    public class SwatchViewModel : IRequiresGLDataContext, INotifyPropertyChanged
+    public sealed class SwatchTool : BaseTool<Swatch, SwatchViewModel>
+    {
+        public SwatchTool() : base(name: "Swatch")
+        {
+        }
+
+        public override bool IsEnabled
+        {
+            get
+            {
+
+                bool always = true;
+                return always;
+            }
+        }
+
+        public override bool IsVisible
+        {
+            get
+            {
+                bool always = true;
+                return LicenseData != null && LicenseData.LicenseType == LicenseType.Experimental;
+            }
+        }
+    }
+
+    public sealed class SwatchViewModel : BaseViewModel
     {
         public DelegateCommand ApplyBtn_OnClick { get; private set; }
-
-        private GLDataContext _glDataContext;
 
         private double _red;
         public double Red { get { return _red; } set { _red = value; NotifyPropertyChanged(nameof(Red)); } }
@@ -27,16 +51,8 @@ namespace Slab
             ApplyBtn_OnClick = new DelegateCommand(OnApply);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyPropertyChanged(string propertyName)
+        protected override void OnInitialize()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public void Initialize(GLDataContext glDataContext)
-        {
-            _glDataContext = glDataContext;
             _red = _glDataContext.BackgroundColor.Red;
             _blue = _glDataContext.BackgroundColor.Blue;
             _green = _glDataContext.BackgroundColor.Green;

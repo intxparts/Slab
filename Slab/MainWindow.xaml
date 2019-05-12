@@ -7,6 +7,9 @@
         xmlns:local="clr-namespace:Slab"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibility" />
+    </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding Window_OnLoaded}"/>
@@ -43,7 +46,11 @@
                 </ListView.ItemsPanel>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Label Content="{Binding Name}" /> <!-- TODO - add icon -->
+                        <Label
+                            Content="{Binding Name}" 
+                            Visibility="{Binding IsVisible, Converter={StaticResource boolToVisibility}}" 
+                            IsEnabled="{Binding IsEnabled}" 
+                        /> <!-- TODO - add icon -->
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

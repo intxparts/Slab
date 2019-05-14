@@ -58,21 +58,21 @@ namespace Slab.Tools
             _green = _glDataContext.BackgroundColor.Green;
         }
 
-        public void RefreshSwatch()
+        private void RefreshSwatch()
         {
             _glDataContext.RequestInvalidate();
         }
 
-        public void UpdateBackground()
+        private void UpdateDataContext()
         {
             _glDataContext.BackgroundColor.Red = (float)Red;
             _glDataContext.BackgroundColor.Blue = (float)Blue;
             _glDataContext.BackgroundColor.Green = (float)Green;
         }
 
-        public void OnApply()
+        private void OnApply()
         {
-            UpdateBackground();
+            UpdateDataContext();
             RefreshSwatch();
         }
     }

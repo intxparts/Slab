@@ -8,6 +8,7 @@ namespace Slab
 {
     public enum LicenseType
     {
+        None,
         Basic,
         Premium,
         Experimental

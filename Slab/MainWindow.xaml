@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="boolToVisibility" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -48,7 +48,7 @@
                     <DataTemplate>
                         <Label
                             Content="{Binding Name}" 
-                            Visibility="{Binding IsVisible, Converter={StaticResource boolToVisibility}}" 
+                            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" 
                             IsEnabled="{Binding IsEnabled}" 
                         /> <!-- TODO - add icon -->
                     </DataTemplate>
@@ -58,14 +58,21 @@
         
         <Grid Grid.Row="2" x:Name="OpenGLContext_Grid">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0" x:Name="CommandPane_StkPnl" Background="LightGray" />
+            <StackPanel Grid.Column="0" x:Name="CommandPane_StkPnl" Background="LightGray" Visibility="{Binding IsToolSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             <WindowsFormsHost Grid.Column="1" x:Name="Canvas_WFH" Initialized="WindowsFormsHost_Initialized"/>
-            <StackPanel Grid.Column="2" x:Name="PropertiesPane_StkPnl"/>
+            <StackPanel Grid.Column="2" x:Name="PropertiesPane_StkPnl">
+                <StackPanel x:Name="ExpandedPropertiesStackPanel" Visibility="{Binding IsPropertiesPaneExpanded, Converter={StaticResource BooleanToVisibilityConverter}}" Width="100">
+                    <Button x:Name="CollapsePropertiesPaneButton" Content="&gt;&gt;" Command="{Binding OnPropertiesPaneCollapseCommand}" />
+                </StackPanel>
+                <StackPanel x:Name="CollapsedPropertiesStackPanel" Visibility="{Binding IsPropertiesPaneCollapsed, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Button x:Name="ExpandPropertiesPaneButton" Content="&lt;&lt;" Command="{Binding OnPropertiesPaneExpandCommand}" />
+                </StackPanel>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

@@ -16,7 +16,7 @@ namespace Slab
         {
             Window_OnLoaded = new DelegateCommand(OnWindowLoaded);
 
-            _glDataContext = new GLDataContext()
+            var glDataContext = new GLDataContext()
             {
                 BackgroundColor = new Color()
                 {
@@ -25,8 +25,13 @@ namespace Slab
                     Green = 0
                 }
             };
-            _dataModel = new DataModel();
-            _licenseData = new LicenseData() { LicenseType = LicenseType.Experimental };
+            var dataModel = new DataModel();
+            _serviceContainer = new ServiceContainer();
+            _canvasService = _serviceContainer.CanvasService;
+            _canvasService.GLDataContext = glDataContext;
+            _serviceContainer.DataModelService.DataModel = dataModel;
+            var licenseData = new LicenseData() { LicenseType = LicenseType.Experimental };
+            _serviceContainer.LicenseService.LicenseData = licenseData;
 
             Tools = new List<ITool>();
             Tools.Add(new WelcomeTool());
@@ -40,10 +45,9 @@ namespace Slab
             Tools.Add(new WelcomeTool());
 
             foreach (var tool in Tools)
-                tool.Initialize(_dataModel, _licenseData);
+                tool.Initialize(_serviceContainer);
 
             _isPropertiesPaneExpanded = true;
-            _selectedTool = null;
             _onPropertiesPaneExpandCommand = new DelegateCommand(OnPropertiesPaneExpand);
             _onPropertiesPaneCollapseCommand = new DelegateCommand(OnPropertiesPaneCollapse);
         }
@@ -58,19 +62,15 @@ namespace Slab
             IsPropertiesPaneExpanded = true;
         }
 
-        private GLDataContext _glDataContext;
-        private DataModel _dataModel;
-        private LicenseData _licenseData;
+        private readonly IServiceContainer _serviceContainer;
+        private readonly Services.ICanvasService _canvasService;
+        public Services.ICanvasService CanvasService { get { return _canvasService; } }
 
         private readonly DelegateCommand _onPropertiesPaneCollapseCommand;
         private readonly DelegateCommand _onPropertiesPaneExpandCommand;
 
         public DelegateCommand OnPropertiesPaneCollapseCommand => _onPropertiesPaneCollapseCommand;
         public DelegateCommand OnPropertiesPaneExpandCommand => _onPropertiesPaneExpandCommand;
-
-        public DataModel DataModel { get { return _dataModel; } }
-        public LicenseData LicenseData { get { return _licenseData; } }
-        public GLDataContext GLDataContext { get { return _glDataContext; } }
 
         private bool _isPropertiesPaneExpanded;
         public bool IsPropertiesPaneExpanded
@@ -94,6 +94,14 @@ namespace Slab
             }
         }
 
+        public bool IsToolSelected
+        {
+            get
+            {
+                return _selectedTool != null;
+            }
+        }
+
 
         public List<ITool> Tools { get; private set; }
 
@@ -106,18 +114,13 @@ namespace Slab
             }
             set
             {
-                // on changing tools
                 if (_selectedTool != value)
                 {
                     _selectedTool = value;
+                    OnSelectedToolChanged();
+                    NotifyPropertyChanged(nameof(SelectedTool));
+                    NotifyPropertyChanged(nameof(IsToolSelected));
                 }
-                // on selecting the same tool
-                else
-                {
-                    _selectedTool = null;
-                }
-                OnSelectedToolChanged();
-                NotifyPropertyChanged(nameof(SelectedTool));
             }
         }
 
@@ -125,6 +128,7 @@ namespace Slab
 
         public void OnWindowLoaded()
         {
+            SelectedTool = Tools[0];
         }
 
         public void OnSelectedToolChanged()
@@ -137,7 +141,7 @@ namespace Slab
             if (vm == null || usrCtrl == null)
                 return;
 
-            vm.Initialize(_glDataContext, _dataModel, _licenseData);
+            vm.Initialize(_serviceContainer);
 
             // bind the view data context to the view model
             usrCtrl.DataContext = vm;

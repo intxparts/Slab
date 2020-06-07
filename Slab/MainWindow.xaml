@@ -16,63 +16,62 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid x:Name="Main_Grid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        
-        <Menu Grid.Row="0" x:Name="Main_Menu">
-            <MenuItem Header="File">
-                <MenuItem Header="Open" />
-                <MenuItem Header="Import" />
-                <MenuItem Header="Export" />
-                <MenuItem Header="Save" />
-                <MenuItem Header="Save As" />
-                <MenuItem Header="Print" />
-                <MenuItem Header="Exit" />
-            </MenuItem>
-            <MenuItem Header="Edit">
-                <MenuItem Header="Settings"/>
-            </MenuItem>
-        </Menu>
+        <TabControl>
+            <TabItem Header="Tab1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="1" x:Name="Tools_StkPnl" Orientation="Horizontal">
-            <ListView x:Name="Toolbar_ListView" ItemsSource="{Binding Tools}" SelectedItem="{Binding SelectedTool}">
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Label
-                            Content="{Binding Name}" 
-                            Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                            IsEnabled="{Binding IsEnabled}" 
-                        /> <!-- TODO - add icon -->
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackPanel>
-        
-        <Grid Grid.Row="2" x:Name="OpenGLContext_Grid">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0" x:Name="Tools_StkPnl" Orientation="Horizontal">
+                        <ListBox x:Name="Toolbar_ListView" 
+                                  ItemsSource="{Binding Tools}"
+                                  SelectedItem="{Binding SelectedTool}"
+                                  SelectionMode="Single"
+                            >
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Label
+                                        Content="{Binding Name}" 
+                                        Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                        IsEnabled="{Binding IsEnabled}" 
+                                    />
+                                    <!-- TODO - add icon -->
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
 
-            <StackPanel Grid.Column="0" x:Name="CommandPane_StkPnl" Background="LightGray" Visibility="{Binding IsToolSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <WindowsFormsHost Grid.Column="1" x:Name="Canvas_WFH" Initialized="WindowsFormsHost_Initialized"/>
-            <StackPanel Grid.Column="2" x:Name="PropertiesPane_StkPnl">
-                <StackPanel x:Name="ExpandedPropertiesStackPanel" Visibility="{Binding IsPropertiesPaneExpanded, Converter={StaticResource BooleanToVisibilityConverter}}" Width="100">
-                    <Button x:Name="CollapsePropertiesPaneButton" Content="&gt;&gt;" Command="{Binding OnPropertiesPaneCollapseCommand}" />
-                </StackPanel>
-                <StackPanel x:Name="CollapsedPropertiesStackPanel" Visibility="{Binding IsPropertiesPaneCollapsed, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Button x:Name="ExpandPropertiesPaneButton" Content="&lt;&lt;" Command="{Binding OnPropertiesPaneExpandCommand}" />
-                </StackPanel>
-            </StackPanel>
-        </Grid>
+                    <Grid Grid.Row="1" x:Name="OpenGLContext_Grid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" x:Name="CommandPane_StkPnl" Background="LightGray" Visibility="{Binding IsToolSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <WindowsFormsHost Grid.Column="1" x:Name="Canvas_WFH" Initialized="WindowsFormsHost_Initialized" />
+                        <StackPanel Grid.Column="2" x:Name="PropertiesPane_StkPnl">
+                            <StackPanel x:Name="ExpandedPropertiesStackPanel" Visibility="{Binding IsPropertiesPaneExpanded, Converter={StaticResource BooleanToVisibilityConverter}}" Width="100">
+                                <Button x:Name="CollapsePropertiesPaneButton" Content="&gt;&gt;" Command="{Binding OnPropertiesPaneCollapseCommand}" />
+                            </StackPanel>
+                            <StackPanel x:Name="CollapsedPropertiesStackPanel" Visibility="{Binding IsPropertiesPaneCollapsed, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Button x:Name="ExpandPropertiesPaneButton" Content="&lt;&lt;" Command="{Binding OnPropertiesPaneExpandCommand}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Tab2">
+
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </Window>

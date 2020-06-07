@@ -27,13 +27,15 @@ namespace Slab
     {
         private GLControl _glControl;
         private MainWindowViewModel _viewModel;
+        private Services.ICanvasService _canvasService;
 
         public MainWindow()
         {
             InitializeComponent();
             _viewModel = new MainWindowViewModel();
             _viewModel.RequestLoadTool += _viewModel_RequestLoadTool;
-            _viewModel.GLDataContext.RequestGLInvalidate += GLContext_RequestGLInvalidate;
+            _canvasService = _viewModel.CanvasService;
+            _canvasService.RequestGLInvalidate += GLContext_RequestGLInvalidate;
 
             DataContext = _viewModel;
         }
@@ -66,9 +68,9 @@ namespace Slab
         private void GLControl_Paint(object sender, PaintEventArgs e)
         {
             GL.ClearColor(
-                _viewModel.GLDataContext.BackgroundColor.Red,
-                _viewModel.GLDataContext.BackgroundColor.Green,
-                _viewModel.GLDataContext.BackgroundColor.Blue,
+                _canvasService.GLDataContext.BackgroundColor.Red,
+                _canvasService.GLDataContext.BackgroundColor.Green,
+                _canvasService.GLDataContext.BackgroundColor.Blue,
                 1
             );
             GL.Clear(
@@ -79,5 +81,6 @@ namespace Slab
 
             _glControl.SwapBuffers();
         }
+
     }
 }

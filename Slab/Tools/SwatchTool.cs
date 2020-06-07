@@ -35,6 +35,9 @@ namespace Slab.Tools
 
     public sealed class SwatchViewModel : BaseViewModel
     {
+        private Services.ICanvasService _canvasService;
+        private GLDataContext _glDataContext;
+
         public DelegateCommand ApplyBtn_OnClick { get; private set; }
 
         private double _red;
@@ -51,8 +54,12 @@ namespace Slab.Tools
             ApplyBtn_OnClick = new DelegateCommand(OnApply);
         }
 
-        protected override void OnInitialize()
+        public override void Initialize(IServiceContainer container)
         {
+            base.Initialize(container);
+
+            _canvasService = container.CanvasService;
+            _glDataContext = _canvasService.GLDataContext;
             _red = _glDataContext.BackgroundColor.Red;
             _blue = _glDataContext.BackgroundColor.Blue;
             _green = _glDataContext.BackgroundColor.Green;
@@ -60,7 +67,7 @@ namespace Slab.Tools
 
         private void RefreshSwatch()
         {
-            _glDataContext.RequestInvalidate();
+            _canvasService.RequestInvalidate();
         }
 
         private void UpdateDataContext()

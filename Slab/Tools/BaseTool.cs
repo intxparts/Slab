@@ -14,7 +14,7 @@ namespace Slab.Tools
         Type DefinedViewModelType { get; }
         bool IsVisible { get; }
         bool IsEnabled { get; }
-        void Initialize(DataModel dataModel, LicenseData licenseData);
+        void Initialize(IServiceContainer container);
     }
 
     public abstract class BaseTool<TView, TViewModel> : ITool, INotifyPropertyChanged 
@@ -33,10 +33,13 @@ namespace Slab.Tools
         public Type DefinedViewType { get { return typeof(TView); } }
         public Type DefinedViewModelType { get { return typeof(TViewModel); } }
 
-        public void Initialize(DataModel dataModel, LicenseData licenseData)
+        public virtual void Initialize(IServiceContainer container)
         {
-            _dataModel = dataModel;
-            _licenseData = licenseData;
+            Services.ILicenseService licenseService = container.LicenseService;
+            Services.IDataModelService dataModelService = container.DataModelService;
+
+            _licenseData = licenseService.LicenseData;
+            _dataModel = dataModelService.DataModel; 
         }
 
         protected LicenseData _licenseData;
@@ -81,28 +84,22 @@ namespace Slab.Tools
 
     public interface IViewModel
     {
-        void Initialize(GLDataContext glDataContext, DataModel dataModel, LicenseData licenseData);
+        void Initialize(IServiceContainer container);
     }
 
     public abstract class BaseViewModel : IViewModel, INotifyPropertyChanged
     {
         protected LicenseData _licenseData;
         protected DataModel _dataModel;
-        protected GLDataContext _glDataContext;
 
-        /// <summary>
-        /// Occurs prior to DataBinding
-        /// </summary>
-        protected virtual void OnInitialize()
+        public virtual void Initialize(IServiceContainer container)
         {
-        }
+            Services.ICanvasService canvasService = container.CanvasService;
+            Services.IDataModelService dataModelService = container.DataModelService;
+            Services.ILicenseService licenseService = container.LicenseService;
 
-        public void Initialize(GLDataContext glDataContext, DataModel dataModel, LicenseData licenseData)
-        {
-            _licenseData = licenseData;
-            _dataModel = dataModel;
-            _glDataContext = glDataContext;
-            OnInitialize();
+            _licenseData = licenseService.LicenseData;
+            _dataModel = dataModelService.DataModel;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

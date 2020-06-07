@@ -26,11 +26,11 @@ namespace Slab.Tools
                     .ConvertAll(v => new LicenseTypeData(v));
         }
 
-        protected override void OnInitialize()
+        public override void Initialize(IServiceContainer container)
         {
+            base.Initialize(container);
             _selectedLicenseTypeData = _licenseTypes.FirstOrDefault(l => l.LicenseType == _licenseData.LicenseType);
         }
-
 
         public class LicenseTypeData
         {

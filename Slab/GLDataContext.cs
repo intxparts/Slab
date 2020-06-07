@@ -16,13 +16,6 @@ namespace Slab
 
     public class GLDataContext
     {
-        public event EventHandler RequestGLInvalidate;
-
         public Color BackgroundColor { get; set; }
-
-        public void RequestInvalidate()
-        {
-            RequestGLInvalidate?.Invoke(this, EventArgs.Empty);
-        }
     }
 }
